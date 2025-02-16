@@ -46,6 +46,9 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+    protected $connection = 'pgsql';
+    protected $table = 'tenant_X.users';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -72,6 +75,12 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
+
+    public function __construct() {
+        $tenantId = app('currentTenant')->id;
+        $this->table = "tenant_{$tenantId}.users";
+    }
+
     protected function casts(): array
     {
         return [
