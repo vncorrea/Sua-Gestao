@@ -15,7 +15,7 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
-            return redirect()->intended('/login');
+            return redirect()->intended('/dashboard');
         }
 
         return back()->withErrors(['email' => 'Credenciais inválidas']);
