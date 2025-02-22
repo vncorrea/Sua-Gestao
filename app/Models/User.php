@@ -78,7 +78,7 @@ class User extends Authenticatable
 
     public function __construct() {
         $tenantId = app('currentTenant')->id;
-        $this->table = "tenant_{$tenantId}.users";
+        $this->table = "{$tenantId}.users";
     }
 
     protected function casts(): array
