@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,14 +12,11 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 
 /**
- * 
  *
- * @property int $id_tenant
- * @property string $name
+ *
+ * @property int $id
  * @property string $domain
- * @property json $config
- * @property boolean $active
- * @property int $id_plan
+ * @property int $tenant_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
@@ -28,27 +24,21 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Tenant newModelQuery()
  * @method static Builder<static>|Tenant newQuery()
  * @method static Builder<static>|Tenant query()
- * @property-read Plan|null $plan
+ * @property-read Tenant|null $tenant
  * @mixin \Eloquent
  */
-class Tenant extends Model
+class Domain extends Model
 {
     use HasFactory, Notifiable;
 
-    protected $table = 'tenants';
-    protected $primaryKey = 'id';
-    public $incrementing = false;
-    protected $keyType = 'string';
+    protected $table = 'domains';
     protected $fillable = [
-        'name',
         'domain',
-        'config',
-        'active',
-        'id_plan'
+        'tenant_id',
     ];
 
-    public function plan(): BelongsTo
+    public function tenant(): BelongsTo
     {
-        return $this->belongsTo(Plan::class, 'id_plan');
+        return $this->belongsTo(Tenant::class, 'tenant_id', 'id');
     }
 }

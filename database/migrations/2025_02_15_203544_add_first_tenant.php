@@ -1,7 +1,9 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
@@ -30,9 +32,19 @@ return new class extends Migration {
             $table->timestamps();
         });
 
+
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('id_tentant')->nullable()->constrained('tenant', 'id_tenant');
+            $table->string('id_tenant')->nullable();
+
+            $table->foreign('id_tenant')->references('id')->on('tenants');
         });
+
+        User::on('pgsql')->create([
+            'name' => 'Admin',
+            'email' => 'admin@cliente1.com',
+            'password' => Hash::make('senha123'),
+            'tenant_id' => 'tenant_test',
+        ]);
     }
 
     /**
@@ -43,7 +55,8 @@ return new class extends Migration {
         Schema::dropIfExists('plan');
         Schema::dropIfExists('tenant');
         Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign(['id_tentant']);
+            $table->dropForeign(['id_tenant']);
+            $table->dropColumn('id_tenant');
         });
     }
 };
